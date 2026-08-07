@@ -1,0 +1,196 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var scheduledList = ViewBag.ScheduledList as System.Collections.Generic.List<Hospital.Models.ScheduledDoctor>;
+    var visitingList = ViewBag.VisitingList as System.Collections.Generic.List<Hospital.Models.VisitingDoctor>;
+    var telemedicineList = ViewBag.TelemedicineList as System.Collections.Generic.List<Hospital.Models.DoctorTelemedicine>;
+    var shiftList = ViewBag.ShiftList as System.Collections.Generic.List<Hospital.Models.DoctorInShift>;
+    var leaveList = ViewBag.LeaveList as System.Collections.Generic.List<Hospital.Models.DoctorOnLeave>;
+}
+
+<div class="panel">
+    <div class="panel-header">DOCTOR'S AVAILABILITY</div>
+    <table>
+        <colgroup>
+            <col style="width:8%;" />
+            <col style="width:34%;" />
+            <col style="width:22%;" />
+            <col style="width:14%;" />
+            <col style="width:11%;" />
+            <col style="width:11%;" />
+        </colgroup>
+        <thead>
+            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th></tr>
+        </thead>
+        <tbody>
+            @{ int sNo1 = 1; }
+            @if (scheduledList != null && scheduledList.Count > 0)
+            {
+                foreach (var item in scheduledList)
+                {
+                    <tr>
+                        <td>@sNo1</td>
+                        <td class="doc-name">@item.Doctor.Name</td>
+                        <td class="specialist">@item.Doctor.Specialist</td>
+                        <td>@item.RoomNo</td>
+                        <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                    </tr>
+                    sNo1++;
+                }
+            }
+            else
+            {
+                <tr><td colspan="6" class="no-data">No Data Found</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="panel">
+    <div class="panel-header">VISITING DOCTORS</div>
+    @if (visitingList != null && visitingList.Count > 0)
+    {
+        <table>
+            <colgroup>
+                <col style="width:6%;" />
+                <col style="width:44%;" />
+                <col style="width:20%;" />
+                <col style="width:12%;" />
+                <col style="width:9%;" />
+                <col style="width:9%;" />
+            </colgroup>
+            <thead>
+                <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th></tr>
+            </thead>
+            <tbody>
+                @{ int sNo2 = 1; }
+                @foreach (var item in visitingList)
+                {
+                    <tr>
+                        <td>@sNo2</td>
+                        <td class="doc-name">@item.DoctorName</td>
+                        <td class="specialist">@item.Specialist</td>
+                        <td>@item.RoomNo</td>
+                        <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                    </tr>
+                    sNo2++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-data">No Data Found</div>
+    }
+</div>
+
+<div class="panel">
+    <div class="panel-header">DOCTORS IN TELEMEDICINE</div>
+    @if (telemedicineList != null && telemedicineList.Count > 0)
+    {
+        <table>
+            <colgroup>
+                <col style="width:6%;" />
+                <col style="width:44%;" />
+                <col style="width:20%;" />
+                <col style="width:12%;" />
+                <col style="width:9%;" />
+                <col style="width:9%;" />
+            </colgroup>
+            <thead>
+                <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th></tr>
+            </thead>
+            <tbody>
+                @{ int sNo3 = 1; }
+                @foreach (var item in telemedicineList)
+                {
+                    <tr>
+                        <td>@sNo3</td>
+                        <td class="doc-name">@item.DoctorName</td>
+                        <td class="specialist">@item.Specialist</td>
+                        <td>@item.RoomNo</td>
+                        <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                    </tr>
+                    sNo3++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-data">No Data Found</div>
+    }
+</div>
+
+<div class="panel">
+    <div class="panel-header">DOCTORS IN SHIFT</div>
+    @if (shiftList != null && shiftList.Count > 0)
+    {
+        <table>
+            <colgroup>
+                <col style="width:10%;" />
+                <col style="width:40%;" />
+                <col style="width:25%;" />
+                <col style="width:25%;" />
+            </colgroup>
+            <thead>
+                <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Shift</th></tr>
+            </thead>
+            <tbody>
+                @{ int sNo4 = 1; }
+                @foreach (var item in shiftList)
+                {
+                    <tr>
+                        <td>@sNo4</td>
+                        <td class="doc-name">@item.Doctor.Name</td>
+                        <td class="specialist">@item.Doctor.Specialist</td>
+                        <td>@item.Shift</td>
+                    </tr>
+                    sNo4++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-data">No Data Found</div>
+    }
+</div>
+
+<div class="panel">
+    <div class="panel-header">DOCTORS ON LEAVE</div>
+    @if (leaveList != null && leaveList.Count > 0)
+    {
+        <table>
+            <colgroup>
+                <col style="width:10%;" />
+                <col style="width:30%;" />
+                <col style="width:20%;" />
+                <col style="width:40%;" />
+            </colgroup>
+            <thead>
+                <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>From Date To Date</th></tr>
+            </thead>
+            <tbody>
+                @{ int sNo5 = 1; }
+                @foreach (var item in leaveList)
+                {
+                    <tr>
+                        <td>@sNo5</td>
+                        <td class="doc-name">@item.Doctor.Name</td>
+                        <td class="specialist">@item.Doctor.Specialist</td>
+                        <td>@item.FromDate.ToString("dd-MM-yyyy") - @item.ToDate.ToString("dd-MM-yyyy")</td>
+                    </tr>
+                    sNo5++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-data">No Data Found</div>
+    }
+</div>

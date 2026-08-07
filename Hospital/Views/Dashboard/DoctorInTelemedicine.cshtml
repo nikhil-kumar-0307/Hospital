@@ -1,0 +1,72 @@
+﻿@model Hospital.Models.DTOs.DoctorTelemedicineDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel">
+    <div class="panel-header">ADD DOCTOR IN TELEMEDICINE</div>
+    <div style="padding: 20px; max-width: 480px;">
+        @using (Html.BeginForm("DoctorInTelemedicine", "Dashboard", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div style="margin-bottom: 14px;">
+                @Html.LabelFor(m => m.DoctorName, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
+                @Html.TextBoxFor(m => m.DoctorName, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. Dr. Abhishek Sing (Medanta Hospital) (11:30am to 12:30pm)" })
+                @Html.ValidationMessageFor(m => m.DoctorName, "", new { style = "color:#d92b2b; font-size:12px;" })
+            </div>
+            <div style="margin-bottom: 14px;">
+                @Html.LabelFor(m => m.Specialist, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
+                @Html.TextBoxFor(m => m.Specialist, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. Cardiology" })
+                @Html.ValidationMessageFor(m => m.Specialist, "", new { style = "color:#d92b2b; font-size:12px;" })
+            </div>
+            <div style="margin-bottom: 14px;">
+                @Html.LabelFor(m => m.RoomNo, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
+                @Html.TextBoxFor(m => m.RoomNo, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. 23" })
+                @Html.ValidationMessageFor(m => m.RoomNo, "", new { style = "color:#d92b2b; font-size:12px;" })
+            </div>
+            <div style="margin-bottom: 14px; display:flex; gap: 24px;">
+                <label style="font-size:13px; display:flex; align-items:center; gap:6px;">
+                    @Html.CheckBoxFor(m => m.Forenoon) Forenoon
+                </label>
+                <label style="font-size:13px; display:flex; align-items:center; gap:6px;">
+                    @Html.CheckBoxFor(m => m.Afternoon) Afternoon
+                </label>
+            </div>
+            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save</button>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">DOCTORS IN TELEMEDICINE</div>
+    <table>
+        <thead>
+            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th></tr>
+        </thead>
+        <tbody>
+            @{
+                var telemedicineList = ViewBag.TelemedicineList as System.Collections.Generic.List<Hospital.Models.DoctorTelemedicine>;
+                int sNo = 1;
+            }
+            @if (telemedicineList != null && telemedicineList.Count > 0)
+            {
+                foreach (var item in telemedicineList)
+                {
+                    <tr>
+                        <td>@sNo</td>
+                        <td class="doc-name">@item.DoctorName</td>
+                        <td class="specialist">@item.Specialist</td>
+                        <td>@item.RoomNo</td>
+                        <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                    </tr>
+                    sNo++;
+                }
+            }
+            else
+            {
+                <tr><td colspan="6" class="no-data">No telemedicine doctors found</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

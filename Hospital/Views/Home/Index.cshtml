@@ -1,0 +1,509 @@
+﻿@{
+    ViewBag.Title = "Doctor's Availability";
+    Layout = null;
+
+    var scheduledList = ViewBag.ScheduledList as System.Collections.Generic.List<Hospital.Models.ScheduledDoctor>;
+    var visitingList = ViewBag.VisitingList as System.Collections.Generic.List<Hospital.Models.VisitingDoctor>;
+    var telemedicineList = ViewBag.TelemedicineList as System.Collections.Generic.List<Hospital.Models.DoctorTelemedicine>;
+    var shiftList = ViewBag.ShiftList as System.Collections.Generic.List<Hospital.Models.DoctorInShift>;
+    var leaveList = ViewBag.LeaveList as System.Collections.Generic.List<Hospital.Models.DoctorOnLeave>;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Doctor's Availability</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: #eef1f4;
+            color: #223;
+        }
+
+        /* HEADER */
+        .header {
+            background: #0b2e5e;
+            color: #fff;
+            padding: 14px 24px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .header .logo-box img {
+                height: 55px;
+                background: #fff;
+                border-radius: 4px;
+                padding: 4px 8px;
+            }
+
+            .header .title-block {
+                text-align: center;
+                flex: 1;
+            }
+
+                .header .title-block h1 {
+                    margin: 0;
+                    font-size: 26px;
+                    letter-spacing: 1px;
+                    font-weight: 700;
+                }
+
+            .header .right-block {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+                .header .right-block img {
+                    height: 55px;
+                    background: #fff;
+                    border-radius: 4px;
+                    padding: 4px 8px;
+                }
+
+        .btn-login {
+            background: #ffb703;
+            color: #0b2e5e;
+            border: none;
+            padding: 9px 20px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .btn-login:hover {
+                background: #ffc93c;
+            }
+
+        /* DATE NAV */
+        .date-nav {
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .date-arrow {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255,255,255,0.15);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            line-height: 1;
+        }
+
+            .date-arrow:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .date-picker-form {
+            display: inline-block;
+        }
+
+        .date-picker-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-bottom: 1px dashed rgba(255,255,255,0.5);
+        }
+
+            .date-picker-input::-webkit-calendar-picker-indicator {
+                filter: invert(1);
+                cursor: pointer;
+            }
+
+        .today-link {
+            color: #ffb703;
+            font-size: 12px;
+            text-decoration: none;
+            border: 1px solid #ffb703;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+
+            .today-link:hover {
+                background: #ffb703;
+                color: #0b2e5e;
+            }
+
+        /* LAYOUT */
+        .content-wrap {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            align-items: flex-start;
+        }
+
+        .col-left {
+            flex: 0 0 46%;
+        }
+
+        .col-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #d7dee6;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: #1f6fb2;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: .5px;
+            padding: 8px 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 13px;
+        }
+
+        thead th {
+            background: #f2f5f8;
+            text-align: center;
+            padding: 8px 6px;
+            font-weight: 700;
+            border: 1px solid #d7dee6;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            text-align: center;
+            padding: 8px 6px;
+            border: 1px solid #eef2f6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafcfe;
+        }
+
+        .doc-name, .specialist {
+            text-align: left;
+        }
+
+        .icon-yes {
+            color: #1e9e4e;
+            font-weight: 700;
+        }
+
+        .icon-no {
+            color: #d92b2b;
+            font-weight: 700;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 14px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #667;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-box">
+            <img src="~/Content/images/ntpc-50-years-logo.png" alt="NTPC 50 Years" />
+        </div>
+
+        <div class="title-block">
+            <h1>DOCTOR'S AVAILABILITY</h1>
+            <div class="date-nav">
+                <a class="date-arrow" href="@Url.Action("Index", "Home", new { date = ViewBag.PrevDate })" title="Previous day">&#8592;</a>
+
+                <form class="date-picker-form" method="get" action="@Url.Action("Index", "Home")">
+                    <input type="date" name="date" class="date-picker-input"
+                           value="@ViewBag.DateValue"
+                           onchange="this.form.submit()" />
+                </form>
+
+                <a class="date-arrow" href="@Url.Action("Index", "Home", new { date = ViewBag.NextDate })" title="Next day">&#8594;</a>
+
+                @if (!(bool)ViewBag.IsToday)
+                {
+                    <a class="today-link" href="@Url.Action("Index", "Home")">Today</a>
+                }
+            </div>
+        </div>
+
+        <div class="right-block">
+            <img src="~/Content/images/kahalgaon-logo.png" alt="Kahalgaon" />
+            <a href="@Url.Action("Login", "Account")">
+                <button class="btn-login">Login</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="content-wrap">
+
+        <!-- LEFT: Doctor's Availability -->
+        <div class="col-left">
+            <div class="panel">
+                <div class="panel-header">DOCTOR'S AVAILABILITY</div>
+                <table>
+                    <colgroup>
+                        <col style="width:8%;" />
+                        <col style="width:34%;" />
+                        <col style="width:22%;" />
+                        <col style="width:14%;" />
+                        <col style="width:11%;" />
+                        <col style="width:11%;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>SNo</th>
+                            <th>Doctor's Name</th>
+                            <th>Specialist</th>
+                            <th>Room No</th>
+                            <th>F/N</th>
+                            <th>A/N</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int sNo1 = 1; }
+                        @if (scheduledList != null && scheduledList.Count > 0)
+                        {
+                            foreach (var item in scheduledList)
+                            {
+                                <tr>
+                                    <td>@sNo1</td>
+                                    <td class="doc-name">@item.Doctor.Name</td>
+                                    <td class="specialist">@item.Doctor.Specialist</td>
+                                    <td>@item.RoomNo</td>
+                                    <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                    <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                </tr>
+                                sNo1++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="6" class="no-data">No Data Found</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIGHT: Visiting / Telemedicine / Shift / Leave -->
+        <div class="col-right">
+
+            <div class="panel">
+                <div class="panel-header">VISITING DOCTORS</div>
+                @if (visitingList != null && visitingList.Count > 0)
+                {
+                    <table>
+                        <colgroup>
+                            <col style="width:6%;" />
+                            <col style="width:44%;" />
+                            <col style="width:20%;" />
+                            <col style="width:12%;" />
+                            <col style="width:9%;" />
+                            <col style="width:9%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>SNo</th>
+                                <th>Doctor's Name</th>
+                                <th>Specialist</th>
+                                <th>Room No</th>
+                                <th>F/N</th>
+                                <th>A/N</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sNo2 = 1; }
+                            @foreach (var item in visitingList)
+                            {
+                                <tr>
+                                    <td>@sNo2</td>
+                                    <td class="doc-name">@item.DoctorName</td>
+                                    <td class="specialist">@item.Specialist</td>
+                                    <td>@item.RoomNo</td>
+                                    <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                    <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                </tr>
+                                sNo2++;
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">No Data Found</div>
+                }
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">DOCTORS IN TELEMEDICINE</div>
+                @if (telemedicineList != null && telemedicineList.Count > 0)
+                {
+                    <table>
+                        <colgroup>
+                            <col style="width:6%;" />
+                            <col style="width:44%;" />
+                            <col style="width:20%;" />
+                            <col style="width:12%;" />
+                            <col style="width:9%;" />
+                            <col style="width:9%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>SNo</th>
+                                <th>Doctor's Name</th>
+                                <th>Specialist</th>
+                                <th>Room No</th>
+                                <th>F/N</th>
+                                <th>A/N</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sNo3 = 1; }
+                            @foreach (var item in telemedicineList)
+                            {
+                                <tr>
+                                    <td>@sNo3</td>
+                                    <td class="doc-name">@item.DoctorName</td>
+                                    <td class="specialist">@item.Specialist</td>
+                                    <td>@item.RoomNo</td>
+                                    <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                    <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                                </tr>
+                                sNo3++;
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">No Data Found</div>
+                }
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">DOCTORS IN SHIFT</div>
+                @if (shiftList != null && shiftList.Count > 0)
+                {
+                    <table>
+                        <colgroup>
+                            <col style="width:10%;" />
+                            <col style="width:40%;" />
+                            <col style="width:25%;" />
+                            <col style="width:25%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>SNo</th>
+                                <th>Doctor's Name</th>
+                                <th>Specialist</th>
+                                <th>Shift</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sNo4 = 1; }
+                            @foreach (var item in shiftList)
+                            {
+                                <tr>
+                                    <td>@sNo4</td>
+                                    <td class="doc-name">@item.Doctor.Name</td>
+                                    <td class="specialist">@item.Doctor.Specialist</td>
+                                    <td>@item.Shift</td>
+                                </tr>
+                                sNo4++;
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">No Data Found</div>
+                }
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">DOCTORS ON LEAVE</div>
+                @if (leaveList != null && leaveList.Count > 0)
+                {
+                    <table>
+                        <colgroup>
+                            <col style="width:10%;" />
+                            <col style="width:30%;" />
+                            <col style="width:20%;" />
+                            <col style="width:40%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>SNo</th>
+                                <th>Doctor's Name</th>
+                                <th>Specialist</th>
+                                <th>From Date To Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sNo5 = 1; }
+                            @foreach (var item in leaveList)
+                            {
+                                <tr>
+                                    <td>@sNo5</td>
+                                    <td class="doc-name">@item.Doctor.Name</td>
+                                    <td class="specialist">@item.Doctor.Specialist</td>
+                                    <td>@item.FromDate.ToString("dd-MM-yyyy") - @item.ToDate.ToString("dd-MM-yyyy")</td>
+                                </tr>
+                                sNo5++;
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">No Data Found</div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        &copy; Copyright 2026 NTPC Ltd. All Rights Reserved | Designed by IT Department Kahalgaon. &nbsp;&nbsp; Last Updated : @ViewBag.LastUpdated
+    </footer>
+
+</body>
+</html>

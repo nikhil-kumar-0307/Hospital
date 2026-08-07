@@ -1,0 +1,188 @@
+﻿@model Hospital.Models.DTOs.LoginDto
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login - Hospital Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: #eef1f4;
+        }
+
+        .header {
+            background: #0b2e5e;
+            color: #fff;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .header img {
+                height: 55px;
+                background: #fff;
+                border-radius: 4px;
+                padding: 4px 8px;
+            }
+
+            .header h1 {
+                margin: 0;
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+
+        .login-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .login-card {
+            background: #fff;
+            border: 1px solid #d7dee6;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 380px;
+            padding: 28px 30px;
+        }
+
+            .login-card h2 {
+                margin: 0 0 20px;
+                font-size: 20px;
+                color: #0b2e5e;
+                text-align: center;
+            }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 5px;
+                color: #334;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="password"] {
+                width: 100%;
+                padding: 9px 10px;
+                border: 1px solid #ccd4dc;
+                border-radius: 4px;
+                font-size: 14px;
+                font-family: 'IBM Plex Mono', monospace;
+            }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #1f6fb2;
+            }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+            .remember-row a {
+                color: #1f6fb2;
+                text-decoration: none;
+            }
+
+        .btn-submit {
+            width: 100%;
+            background: #1f6fb2;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .btn-submit:hover {
+                background: #185a92;
+            }
+
+        .validation-summary {
+            background: #fdeaea;
+            color: #b02a2a;
+            border: 1px solid #f3c1c1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .field-error {
+            color: #d92b2b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="~/Content/images/ntpc-50-years-logo.png" alt="NTPC 50 Years" />
+        <h1>NTPC KAHALGAON - HOSPITAL PORTAL</h1>
+        <img src="~/Content/images/kahalgaon-logo.png" alt="Kahalgaon" />
+    </div>
+
+    <div class="login-wrap">
+        <div class="login-card">
+            <h2>Employee Login</h2>
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                if (!ViewData.ModelState.IsValid && ViewData.ModelState[""] != null)
+                {
+                    <div class="validation-summary">
+                        @Html.ValidationSummary(true, "", new { @class = "" })
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EmployeeNumber, "Employee Number")
+                    @Html.TextBoxFor(m => m.EmployeeNumber, new { @class = "", autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.EmployeeNumber, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, "Password")
+                    @Html.PasswordFor(m => m.Password)
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "field-error" })
+                </div>
+
+                <div class="remember-row">
+                    <label>
+                        @Html.CheckBoxFor(m => m.RememberMe) Remember Me
+                    </label>
+                    @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account")
+                </div>
+
+                <button type="submit" class="btn-submit">Login</button>
+            }
+        </div>
+    </div>
+
+</body>
+</html>
