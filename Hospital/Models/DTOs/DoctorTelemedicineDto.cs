@@ -24,5 +24,10 @@ namespace Hospital.Models.DTOs
 
         [Display(Name = "Afternoon")]
         public bool Afternoon { get; set; }
+
+        [Required]
+        [Display(Name = "Session Date")]
+        [DataType(DataType.Date)]
+        public System.DateTime SessionDate { get; set; } = System.DateTime.Today;
     }
 }

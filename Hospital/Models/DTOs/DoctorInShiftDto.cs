@@ -15,5 +15,10 @@ namespace Hospital.Models.DTOs
 
         // Populated in the controller, not bound from the form
         public SelectList DoctorList { get; set; }
+
+        [Required]
+        [Display(Name = "Shift Date")]
+        [DataType(DataType.Date)]
+        public System.DateTime ShiftDate { get; set; } = System.DateTime.Today;
     }
 }

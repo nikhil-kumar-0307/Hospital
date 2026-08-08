@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Models
@@ -17,5 +18,8 @@ namespace Hospital.Models
         [Required]
         [MaxLength(20)]
         public string Shift { get; set; }
+
+        [Required]
+        public DateTime ShiftDate { get; set; } = DateTime.Today;
     }
 }

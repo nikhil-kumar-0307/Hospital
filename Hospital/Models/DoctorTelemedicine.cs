@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Models
 {
@@ -20,7 +21,9 @@ namespace Hospital.Models
         public string RoomNo { get; set; }
 
         public bool Forenoon { get; set; }
-
         public bool Afternoon { get; set; }
+
+        [Required]
+        public DateTime SessionDate { get; set; } = DateTime.Today;
     }
 }
