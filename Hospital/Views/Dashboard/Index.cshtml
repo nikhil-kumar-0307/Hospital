@@ -7,6 +7,109 @@
     var shiftList = ViewBag.ShiftList as System.Collections.Generic.List<Hospital.Models.DoctorInShift>;
     var leaveList = ViewBag.LeaveList as System.Collections.Generic.List<Hospital.Models.DoctorOnLeave>;
 }
+@section styles {
+    <style>
+        .dash-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border: 1px solid #d7dee6;
+            border-radius: 3px;
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .toolbar-left {
+            color: #445;
+        }
+
+            .toolbar-left .toolbar-label {
+                color: #889;
+                margin-right: 6px;
+            }
+
+        .toolbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-arrow {
+            color: #0b2e5e;
+            text-decoration: none;
+            background: #eef1f4;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            line-height: 1;
+        }
+
+            .date-arrow:hover {
+                background: #dde5ee;
+            }
+
+        .date-picker-form {
+            display: inline-block;
+        }
+
+        .date-picker-input {
+            border: 1px solid #d7dee6;
+            border-radius: 3px;
+            padding: 4px 6px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .today-link {
+            color: #1f6fb2;
+            font-size: 12px;
+            text-decoration: none;
+            border: 1px solid #1f6fb2;
+            border-radius: 3px;
+            padding: 3px 9px;
+        }
+
+            .today-link:hover {
+                background: #1f6fb2;
+                color: #fff;
+            }
+
+        .toolbar-updated {
+            color: #889;
+            font-size: 12px;
+        }
+    </style>
+}
+<div class="dash-toolbar">
+    <div class="toolbar-left">
+        <span class="toolbar-label">Showing data for</span>
+        <strong>@ViewBag.PageDate</strong>
+    </div>
+    <div class="toolbar-nav">
+        <a class="date-arrow" href="@Url.Action("Index", "Dashboard", new { date = ViewBag.PrevDate })" title="Previous day">&#8592;</a>
+
+        <form class="date-picker-form" method="get" action="@Url.Action("Index", "Dashboard")">
+            <input type="date" name="date" class="date-picker-input"
+                   value="@ViewBag.DateValue"
+                   onchange="this.form.submit()" />
+        </form>
+
+        <a class="date-arrow" href="@Url.Action("Index", "Dashboard", new { date = ViewBag.NextDate })" title="Next day">&#8594;</a>
+
+        @if (!(bool)ViewBag.IsToday)
+        {
+            <a class="today-link" href="@Url.Action("Index", "Dashboard")">Today</a>
+        }
+    </div>
+    <div class="toolbar-updated">Last updated @ViewBag.LastUpdated</div>
+</div>
 
 <div class="panel">
     <div class="panel-header">DOCTOR'S AVAILABILITY</div>

@@ -1,9 +1,12 @@
 ﻿@model Hospital.Models.DTOs.AddDoctorDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var cancelUrl = Url.Action("AddDoctor", "Dashboard");
+    var pageTitle = Model.Id > 0 ? "EDIT DOCTOR" : "ADD DOCTOR";
+    var buttonText = Model.Id > 0 ? "Update Doctor" : "Save Doctor";
 }
 <div class="panel">
-    <div class="panel-header">ADD DOCTOR</div>
+    <div class="panel-header">@pageTitle</div>
     <div style="padding: 20px; max-width: 480px;">
         @if (TempData["Success"] != null)
         {
@@ -11,9 +14,16 @@
                 @TempData["Success"]
             </div>
         }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:#fdeaea; color:#d92b2b; border:1px solid #f3c1c1; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Error"]
+            </div>
+        }
         @using (Html.BeginForm("AddDoctor", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.Name, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.Name, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. Dr Krishn Kant Chaudhary" })
@@ -24,7 +34,11 @@
                 @Html.TextBoxFor(m => m.Specialist, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. CMO, PHYSICIAN, SURGEON" })
                 @Html.ValidationMessageFor(m => m.Specialist, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save Doctor</button>
+            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">@buttonText</button>
+            if (Model.Id > 0)
+            {
+                <a href="@cancelUrl" style="margin-left:10px; color:#666; text-decoration:none; font-size:13px;">Cancel</a>
+            }
         }
     </div>
 </div>
@@ -32,15 +46,17 @@
     <div class="panel-header">ALL DOCTORS</div>
     <table>
         <colgroup>
-            <col style="width:10%;" />
-            <col style="width:45%;" />
-            <col style="width:45%;" />
+            <col style="width:8%;" />
+            <col style="width:37%;" />
+            <col style="width:35%;" />
+            <col style="width:20%;" />
         </colgroup>
         <thead>
             <tr>
                 <th>SNo</th>
                 <th>Doctor's Name</th>
                 <th>Specialist</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -52,17 +68,27 @@
             {
                 foreach (var doc in doctorList)
                 {
+                    var editUrl = Url.Action("AddDoctor", "Dashboard", new { id = doc.Id });
+                    var confirmMsg = "Delete Dr. " + doc.Name.Replace("'", "\\'") + "? This cannot be undone.";
                     <tr>
                         <td>@sNo</td>
                         <td>@doc.Name</td>
                         <td>@doc.Specialist</td>
+                        <td>
+                            <a href="@editUrl" style="color:#1f6fb2; text-decoration:none; font-size:12px; margin-right:10px;">Edit</a>
+                            @using (Html.BeginForm("DeleteDoctor", "Dashboard", new { id = doc.Id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('" + confirmMsg + "');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background:none; border:none; color:#d92b2b; cursor:pointer; font-size:12px; padding:0;">Delete</button>
+                            }
+                        </td>
                     </tr>
                     sNo++;
                 }
             }
             else
             {
-                <tr><td colspan="3" class="no-data">No doctors added yet</td></tr>
+                <tr><td colspan="4" class="no-data">No doctors added yet</td></tr>
             }
         </tbody>
     </table>

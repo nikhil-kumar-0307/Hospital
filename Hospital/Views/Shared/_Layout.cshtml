@@ -222,7 +222,7 @@
         </div>
         <div class="title-block">
             <h1>@ViewBag.Title</h1>
-            <div class="page-date">@DateTime.Now.ToString("dd-MMM-yyyy")</div>
+            <div class="page-date">@(ViewBag.PageDate ?? DateTime.Now.ToString("dd-MMM-yyyy"))</div>
         </div>
         <div class="right-block">
             <span class="user-chip">@User.Identity.Name</span>

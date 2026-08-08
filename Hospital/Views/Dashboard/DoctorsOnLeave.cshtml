@@ -1,14 +1,29 @@
 ﻿@model Hospital.Models.DTOs.DoctorOnLeaveDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var cancelUrl = Url.Action("DoctorsOnLeave", "Dashboard");
+    var pageTitle = Model.Id > 0 ? "EDIT DOCTOR ON LEAVE" : "MARK DOCTOR ON LEAVE";
+    var buttonText = Model.Id > 0 ? "Update Leave" : "Save Leave";
 }
-
 <div class="panel">
-    <div class="panel-header">MARK DOCTOR ON LEAVE</div>
+    <div class="panel-header">@pageTitle</div>
     <div style="padding: 20px; max-width: 480px;">
+        @if (TempData["Success"] != null)
+        {
+            <div style="background:#e6f7ea; color:#1e9e4e; border:1px solid #b8e6c4; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:#fdeaea; color:#d92b2b; border:1px solid #f3c1c1; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Error"]
+            </div>
+        }
         @using (Html.BeginForm("DoctorsOnLeave", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.DoctorId, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.DropDownListFor(m => m.DoctorId, Model.DoctorList, "-- Select Doctor --", new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
@@ -24,16 +39,19 @@
                 @Html.TextBoxFor(m => m.ToDate, "{0:yyyy-MM-dd}", new { type = "date", style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
                 @Html.ValidationMessageFor(m => m.ToDate, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save Leave</button>
+            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">@buttonText</button>
+            if (Model.Id > 0)
+            {
+                <a href="@cancelUrl" style="margin-left:10px; color:#666; text-decoration:none; font-size:13px;">Cancel</a>
+            }
         }
     </div>
 </div>
-
 <div class="panel">
     <div class="panel-header">DOCTORS ON LEAVE</div>
     <table>
         <thead>
-            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>From Date To Date</th></tr>
+            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>From Date To Date</th><th>Actions</th></tr>
         </thead>
         <tbody>
             @{
@@ -44,18 +62,28 @@
             {
                 foreach (var item in leaveList)
                 {
+                    var editUrl = Url.Action("DoctorsOnLeave", "Dashboard", new { id = item.Id });
+                    var confirmMsg = "Delete leave record for " + item.Doctor.Name.Replace("'", "\\'") + "?";
                     <tr>
                         <td>@sNo</td>
                         <td>@item.Doctor.Name</td>
                         <td>@item.Doctor.Specialist</td>
                         <td>@item.FromDate.ToString("dd-MM-yyyy") - @item.ToDate.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <a href="@editUrl" style="color:#1f6fb2; text-decoration:none; font-size:12px; margin-right:10px;">Edit</a>
+                            @using (Html.BeginForm("DeleteDoctorsOnLeave", "Dashboard", new { id = item.Id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('" + confirmMsg + "');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background:none; border:none; color:#d92b2b; cursor:pointer; font-size:12px; padding:0;">Delete</button>
+                            }
+                        </td>
                     </tr>
                     sNo++;
                 }
             }
             else
             {
-                <tr><td colspan="4" class="no-data">No doctors on leave</td></tr>
+                <tr><td colspan="5" class="no-data">No doctors on leave</td></tr>
             }
         </tbody>
     </table>

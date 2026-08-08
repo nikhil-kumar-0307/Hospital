@@ -1,14 +1,30 @@
 ﻿@model Hospital.Models.DTOs.VisitingDoctorDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var cancelUrl = Url.Action("VisitingDoctor", "Dashboard");
+    var pageTitle = Model.Id > 0 ? "EDIT VISITING DOCTOR" : "ADD VISITING DOCTOR";
+    var buttonText = Model.Id > 0 ? "Update" : "Save";
 }
 
 <div class="panel">
-    <div class="panel-header">ADD VISITING DOCTOR</div>
+    <div class="panel-header">@pageTitle</div>
     <div style="padding: 20px; max-width: 480px;">
+        @if (TempData["Success"] != null)
+        {
+            <div style="background:#e6f7ea; color:#1e9e4e; border:1px solid #b8e6c4; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:#fdeaea; color:#d92b2b; border:1px solid #f3c1c1; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Error"]
+            </div>
+        }
         @using (Html.BeginForm("VisitingDoctor", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.DoctorName, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.DoctorName, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. Dr. Abhishek Sing (Medanta Hospital) (11:30am to 12:30pm)" })
@@ -37,7 +53,11 @@
                     @Html.CheckBoxFor(m => m.Afternoon) Afternoon
                 </label>
             </div>
-            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save</button>
+            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">@buttonText</button>
+            if (Model.Id > 0)
+            {
+                <a href="@cancelUrl" style="margin-left:10px; color:#666; text-decoration:none; font-size:13px;">Cancel</a>
+            }
         }
     </div>
 </div>
@@ -46,7 +66,7 @@
     <div class="panel-header">VISITING DOCTORS</div>
     <table>
         <thead>
-            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th></tr>
+            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>F/N</th><th>A/N</th><th>Actions</th></tr>
         </thead>
         <tbody>
             @{
@@ -57,6 +77,8 @@
             {
                 foreach (var item in visitingList)
                 {
+                    var editUrl = Url.Action("VisitingDoctor", "Dashboard", new { id = item.Id });
+                    var confirmMsg = "Delete visiting record for " + item.DoctorName.Replace("'", "\\'") + "?";
                     <tr>
                         <td>@sNo</td>
                         <td>@item.DoctorName</td>
@@ -64,13 +86,21 @@
                         <td>@item.RoomNo</td>
                         <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
                         <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>
+                            <a href="@editUrl" style="color:#1f6fb2; text-decoration:none; font-size:12px; margin-right:10px;">Edit</a>
+                            @using (Html.BeginForm("DeleteVisitingDoctor", "Dashboard", new { id = item.Id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('" + confirmMsg + "');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background:none; border:none; color:#d92b2b; cursor:pointer; font-size:12px; padding:0;">Delete</button>
+                            }
+                        </td>
                     </tr>
                     sNo++;
                 }
             }
             else
             {
-                <tr><td colspan="6" class="no-data">No visiting doctors found</td></tr>
+                <tr><td colspan="7" class="no-data">No visiting doctors found</td></tr>
             }
         </tbody>
     </table>

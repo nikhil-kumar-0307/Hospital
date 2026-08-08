@@ -6,6 +6,8 @@ namespace Hospital.Models.DTOs
 {
     public class ScheduledDoctorDto
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Please select a doctor")]
         [Display(Name = "Doctor")]
         public int DoctorId { get; set; }

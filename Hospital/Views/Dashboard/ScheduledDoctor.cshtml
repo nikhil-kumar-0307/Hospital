@@ -1,13 +1,29 @@
 ﻿@model Hospital.Models.DTOs.ScheduledDoctorDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var cancelUrl = Url.Action("ScheduledDoctor", "Dashboard");
+    var pageTitle = Model.Id > 0 ? "EDIT SCHEDULED DOCTOR" : "SCHEDULE A DOCTOR";
+    var buttonText = Model.Id > 0 ? "Update Schedule" : "Save Schedule";
 }
 <div class="panel">
-    <div class="panel-header">SCHEDULE A DOCTOR</div>
+    <div class="panel-header">@pageTitle</div>
     <div style="padding: 20px; max-width: 480px;">
+        @if (TempData["Success"] != null)
+        {
+            <div style="background:#e6f7ea; color:#1e9e4e; border:1px solid #b8e6c4; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:#fdeaea; color:#d92b2b; border:1px solid #f3c1c1; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
+                @TempData["Error"]
+            </div>
+        }
         @using (Html.BeginForm("ScheduledDoctor", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.DoctorId, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.DropDownListFor(m => m.DoctorId, Model.DoctorList, "-- Select Doctor --", new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
@@ -31,7 +47,11 @@
                     @Html.CheckBoxFor(m => m.Afternoon) Afternoon
                 </label>
             </div>
-            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save Schedule</button>
+            <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">@buttonText</button>
+            if (Model.Id > 0)
+            {
+                <a href="@cancelUrl" style="margin-left:10px; color:#666; text-decoration:none; font-size:13px;">Cancel</a>
+            }
         }
     </div>
 </div>
@@ -39,13 +59,14 @@
     <div class="panel-header">SCHEDULED DOCTORS</div>
     <table>
         <colgroup>
-            <col style="width:7%;" />
-            <col style="width:22%;" />
+            <col style="width:6%;" />
             <col style="width:18%;" />
-            <col style="width:12%;" />
             <col style="width:15%;" />
+            <col style="width:10%;" />
             <col style="width:13%;" />
-            <col style="width:13%;" />
+            <col style="width:9%;" />
+            <col style="width:9%;" />
+            <col style="width:20%;" />
         </colgroup>
         <thead>
             <tr>
@@ -56,6 +77,7 @@
                 <th>Date</th>
                 <th>F/N</th>
                 <th>A/N</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -67,6 +89,8 @@
             {
                 foreach (var item in scheduledList)
                 {
+                    var editUrl = Url.Action("ScheduledDoctor", "Dashboard", new { id = item.Id });
+                    var confirmMsg = "Delete this scheduled record for " + item.Doctor.Name.Replace("'", "\\'") + "?";
                     <tr>
                         <td>@sNo</td>
                         <td>@item.Doctor.Name</td>
@@ -75,13 +99,21 @@
                         <td>@item.ScheduledDate.ToString("dd-MM-yyyy")</td>
                         <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
                         <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
+                        <td>
+                            <a href="@editUrl" style="color:#1f6fb2; text-decoration:none; font-size:12px; margin-right:10px;">Edit</a>
+                            @using (Html.BeginForm("DeleteScheduledDoctor", "Dashboard", new { id = item.Id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('" + confirmMsg + "');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background:none; border:none; color:#d92b2b; cursor:pointer; font-size:12px; padding:0;">Delete</button>
+                            }
+                        </td>
                     </tr>
                     sNo++;
                 }
             }
             else
             {
-                <tr><td colspan="7" class="no-data">No scheduled doctors found</td></tr>
+                <tr><td colspan="8" class="no-data">No scheduled doctors found</td></tr>
             }
         </tbody>
     </table>

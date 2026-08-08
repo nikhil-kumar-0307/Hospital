@@ -4,6 +4,8 @@ namespace Hospital.Models.DTOs
 {
     public class AddDoctorDto
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Doctor's name is required")]
         [MaxLength(100)]
         [Display(Name = "Doctor's Name")]
