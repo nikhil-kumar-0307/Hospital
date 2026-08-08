@@ -7,88 +7,221 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Hospital Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: Segoe UI, Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
             background: #eef1f4;
-        }
-
-        .header {
-            background: #0b2e5e;
-            color: #fff;
-            padding: 14px 24px;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }
-
-            .header img {
-                height: 55px;
-                background: #fff;
-                border-radius: 4px;
-                padding: 4px 8px;
-            }
-
-            .header h1 {
-                margin: 0;
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
-
-        .login-wrap {
-            display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 60px 20px;
+            padding: 24px;
         }
 
-        .login-card {
-            background: #fff;
-            border: 1px solid #d7dee6;
-            border-radius: 6px;
+        .portal {
             width: 100%;
-            max-width: 380px;
-            padding: 28px 30px;
+            max-width: 920px;
+            min-height: 560px;
+            display: flex;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(11,46,94,0.15);
         }
 
-            .login-card h2 {
-                margin: 0 0 20px;
-                font-size: 20px;
-                color: #0b2e5e;
-                text-align: center;
+        /* LEFT: identity panel */
+        .panel-left {
+            flex: 0 0 44%;
+            background: #0a2540;
+            color: #dce6f2;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .brand-row img {
+                height: 46px;
+                background: #fff;
+                border-radius: 6px;
+                padding: 4px 6px;
             }
+
+        .brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: #7f9cc0;
+            letter-spacing: 0.5px;
+        }
+
+        .headline {
+            margin-top: 48px;
+        }
+
+            .headline h1 {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 28px;
+                font-weight: 600;
+                line-height: 1.25;
+                color: #fff;
+            }
+
+            .headline p {
+                margin-top: 12px;
+                font-size: 14px;
+                color: #a9bdd6;
+                line-height: 1.6;
+                max-width: 320px;
+            }
+
+        .pulse-wrap {
+            margin-top: 36px;
+            height: 46px;
+            position: relative;
+        }
+
+            .pulse-wrap svg {
+                width: 100%;
+                height: 100%;
+            }
+
+        .pulse-line {
+            fill: none;
+            stroke: #1fa591;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: draw 3.2s linear infinite;
+        }
+
+        @@keyframes draw {
+            0% {
+                stroke-dashoffset: 300;
+            }
+
+            60% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .status-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 12px 14px;
+        }
+
+        .status-label {
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #7f9cc0;
+        }
+
+        .status-value {
+            margin-top: 6px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 20px;
+            color: #4fd3bb;
+            font-weight: 500;
+        }
+
+        .panel-foot {
+            font-size: 11px;
+            color: #5b7699;
+            margin-top: 20px;
+        }
+
+        /* RIGHT: form panel */
+        .panel-right {
+            flex: 1;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-head h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #0a2540;
+        }
+
+        .form-head p {
+            font-size: 13px;
+            color: #6b7a8c;
+            margin-top: 6px;
+        }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-top: 22px;
         }
 
             .form-group label {
                 display: block;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 600;
-                margin-bottom: 5px;
                 color: #334;
+                letter-spacing: 0.2px;
+                margin-bottom: 6px;
             }
 
             .form-group input[type="text"],
             .form-group input[type="password"] {
                 width: 100%;
-                padding: 9px 10px;
-                border: 1px solid #ccd4dc;
-                border-radius: 4px;
+                padding: 11px 12px;
+                border: 1px solid #d5dce4;
+                border-radius: 6px;
                 font-size: 14px;
+                background: #fbfcfd;
                 font-family: 'IBM Plex Mono', monospace;
+                letter-spacing: 0.5px;
+                transition: border-color 0.15s, box-shadow 0.15s;
             }
 
             .form-group input:focus {
                 outline: none;
-                border-color: #1f6fb2;
+                border-color: #12796a;
+                box-shadow: 0 0 0 3px rgba(18,121,106,0.12);
+                background: #fff;
             }
 
         .remember-row {
@@ -96,38 +229,62 @@
             align-items: center;
             justify-content: space-between;
             font-size: 13px;
-            margin-bottom: 18px;
+            margin-top: 18px;
+            color: #445;
         }
 
-            .remember-row a {
-                color: #1f6fb2;
-                text-decoration: none;
+            .remember-row label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
             }
+
+            .remember-row a {
+                color: #12796a;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .remember-row a:hover {
+                    text-decoration: underline;
+                }
 
         .btn-submit {
             width: 100%;
-            background: #1f6fb2;
+            margin-top: 26px;
+            background: #0a2540;
             color: #fff;
             border: none;
-            padding: 10px;
-            font-weight: 700;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 13px;
+            font-weight: 600;
             font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.3px;
+            transition: background 0.15s;
         }
 
             .btn-submit:hover {
-                background: #185a92;
+                background: #123a63;
             }
+
+        .foot-note {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #93a0ae;
+            text-align: center;
+        }
 
         .validation-summary {
             background: #fdeaea;
             color: #b02a2a;
             border: 1px solid #f3c1c1;
             padding: 8px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 13px;
-            margin-bottom: 16px;
+            margin-top: 18px;
         }
 
         .field-error {
@@ -135,19 +292,53 @@
             font-size: 12px;
             margin-top: 4px;
         }
+
+        @@media (max-width: 720px) {
+            .panel-left {
+                display: none;
+            }
+
+            .panel-right {
+                padding: 36px 28px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <img src="~/Content/images/ntpc-50-years-logo.png" alt="NTPC 50 Years" />
-        <h1>NTPC KAHALGAON - HOSPITAL PORTAL</h1>
-        <img src="~/Content/images/kahalgaon-logo.png" alt="Kahalgaon" />
-    </div>
+    <div class="portal">
+        <div class="panel-left">
+            <div>
+                <div class="brand-row">
+                    <img src="~/Content/images/ntpc-50-years-logo.png" alt="NTPC 50 Years" />
+                    <div>
+                        <div class="brand-name">NTPC KAHALGAON</div>
+                        <div class="brand-sub">HOSPITAL PORTAL</div>
+                    </div>
+                </div>
 
-    <div class="login-wrap">
-        <div class="login-card">
-            <h2>Employee Login</h2>
+                <div class="headline">
+                    <h1>Care that stays<br />on shift, always.</h1>
+                    <p>Round-the-clock medical coverage for the people who power the nation.</p>
+                </div>
+
+                <div class="pulse-wrap">
+                    <svg viewBox="0 0 300 46" preserveAspectRatio="none">
+                        <path class="pulse-line" d="M0,23 L60,23 L75,23 L85,6 L100,42 L112,23 L140,23 L150,15 L160,23 L300,23" />
+                    </svg>
+                </div>
+            </div>
+
+            <div>
+                <div class="panel-foot">Employee access only &middot; Kahalgaon site network</div>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="form-head">
+                <h2>Employee login</h2>
+                <p>Sign in with your registered employee number.</p>
+            </div>
 
             @using (Html.BeginForm("Login", "Account", FormMethod.Post))
             {
@@ -161,8 +352,8 @@
                 }
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.EmployeeNumber, "Employee Number")
-                    @Html.TextBoxFor(m => m.EmployeeNumber, new { @class = "", autocomplete = "off" })
+                    @Html.LabelFor(m => m.EmployeeNumber, "Employee number")
+                    @Html.TextBoxFor(m => m.EmployeeNumber, new { autocomplete = "off" })
                     @Html.ValidationMessageFor(m => m.EmployeeNumber, "", new { @class = "field-error" })
                 </div>
 
@@ -174,13 +365,15 @@
 
                 <div class="remember-row">
                     <label>
-                        @Html.CheckBoxFor(m => m.RememberMe) Remember Me
+                        @Html.CheckBoxFor(m => m.RememberMe) Remember me
                     </label>
-                    @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account")
+                    @Html.ActionLink("Forgot password?", "ForgotPassword", "Account")
                 </div>
 
                 <button type="submit" class="btn-submit">Login</button>
             }
+
+            <div class="foot-note">Trouble signing in? Contact IT Department, Kahalgaon</div>
         </div>
     </div>
 

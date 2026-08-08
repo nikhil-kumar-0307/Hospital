@@ -81,7 +81,7 @@ namespace Hospital.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)

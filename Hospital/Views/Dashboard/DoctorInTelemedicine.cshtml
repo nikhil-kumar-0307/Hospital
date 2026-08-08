@@ -24,6 +24,11 @@
                 @Html.TextBoxFor(m => m.RoomNo, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. 23" })
                 @Html.ValidationMessageFor(m => m.RoomNo, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
+            <div style="margin-bottom: 14px;">
+                @Html.LabelFor(m => m.SessionDate, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
+                @Html.TextBoxFor(m => m.SessionDate, "{0:yyyy-MM-dd}", new { type = "date", style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
+                @Html.ValidationMessageFor(m => m.SessionDate, "", new { style = "color:#d92b2b; font-size:12px;" })
+            </div>
             <div style="margin-bottom: 14px; display:flex; gap: 24px;">
                 <label style="font-size:13px; display:flex; align-items:center; gap:6px;">
                     @Html.CheckBoxFor(m => m.Forenoon) Forenoon
@@ -54,8 +59,8 @@
                 {
                     <tr>
                         <td>@sNo</td>
-                        <td class="doc-name">@item.DoctorName</td>
-                        <td class="specialist">@item.Specialist</td>
+                        <td>@item.DoctorName</td>
+                        <td>@item.Specialist</td>
                         <td>@item.RoomNo</td>
                         <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>
                         <td>@Html.Raw(item.Afternoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>

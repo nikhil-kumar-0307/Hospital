@@ -21,19 +21,21 @@ namespace Hospital.Controllers
                                         .ToList();
 
             ViewBag.VisitingList = _db.VisitingDoctors
-                                        .OrderByDescending(v => v.Id)
+                                        .Where(v => DbFunctions.TruncateTime(v.VisitDate) == selectedDate)
+                                        .OrderBy(v => v.DoctorName)
                                         .ToList();
 
             ViewBag.TelemedicineList = _db.DoctorsTelemedicine
-                                            .OrderByDescending(t => t.Id)
+                                            .Where(t => DbFunctions.TruncateTime(t.SessionDate) == selectedDate)
+                                            .OrderBy(t => t.DoctorName)
                                             .ToList();
 
             ViewBag.ShiftList = _db.DoctorsInShift
                                     .Include("Doctor")
-                                    .OrderByDescending(s => s.Id)
+                                    .Where(s => DbFunctions.TruncateTime(s.ShiftDate) == selectedDate)
+                                    .OrderBy(s => s.Doctor.Name)
                                     .ToList();
 
-            // Leave records active on the selected date (FromDate <= selectedDate <= ToDate)
             ViewBag.LeaveList = _db.DoctorsOnLeave
                                     .Include("Doctor")
                                     .Where(l => DbFunctions.TruncateTime(l.FromDate) <= selectedDate

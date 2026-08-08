@@ -133,24 +133,22 @@ namespace Hospital.Controllers
         public ActionResult DoctorInTelemedicine(DoctorTelemedicineDto model)
         {
             ViewBag.Title = "Doctors in Telemedicine";
-
             if (!ModelState.IsValid)
             {
                 ViewBag.TelemedicineList = _db.DoctorsTelemedicine.OrderByDescending(t => t.Id).ToList();
                 return View(model);
             }
-
             var entity = new DoctorTelemedicine
             {
                 DoctorName = model.DoctorName,
                 Specialist = model.Specialist,
                 RoomNo = model.RoomNo,
                 Forenoon = model.Forenoon,
-                Afternoon = model.Afternoon
+                Afternoon = model.Afternoon,
+                SessionDate = model.SessionDate
             };
             _db.DoctorsTelemedicine.Add(entity);
             _db.SaveChanges();
-
             TempData["Success"] = "Telemedicine doctor added successfully.";
             return RedirectToAction("DoctorInTelemedicine");
         }
@@ -170,24 +168,22 @@ namespace Hospital.Controllers
         public ActionResult VisitingDoctor(VisitingDoctorDto model)
         {
             ViewBag.Title = "Visiting Doctors";
-
             if (!ModelState.IsValid)
             {
                 ViewBag.VisitingList = _db.VisitingDoctors.OrderByDescending(v => v.Id).ToList();
                 return View(model);
             }
-
             var entity = new VisitingDoctor
             {
                 DoctorName = model.DoctorName,
                 Specialist = model.Specialist,
                 RoomNo = model.RoomNo,
                 Forenoon = model.Forenoon,
-                Afternoon = model.Afternoon
+                Afternoon = model.Afternoon,
+                VisitDate = model.VisitDate
             };
             _db.VisitingDoctors.Add(entity);
             _db.SaveChanges();
-
             TempData["Success"] = "Visiting doctor added successfully.";
             return RedirectToAction("VisitingDoctor");
         }
@@ -212,22 +208,20 @@ namespace Hospital.Controllers
         public ActionResult DoctorInShift(DoctorInShiftDto model)
         {
             ViewBag.Title = "Doctor In Shift";
-
             if (!ModelState.IsValid)
             {
                 model.DoctorList = new SelectList(_db.Doctors.OrderBy(d => d.Name).ToList(), "Id", "Name", model.DoctorId);
                 ViewBag.ShiftList = _db.DoctorsInShift.Include("Doctor").OrderByDescending(s => s.Id).ToList();
                 return View(model);
             }
-
             var entity = new DoctorInShift
             {
                 DoctorId = model.DoctorId,
-                Shift = model.Shift
+                Shift = model.Shift,
+                ShiftDate = model.ShiftDate
             };
             _db.DoctorsInShift.Add(entity);
             _db.SaveChanges();
-
             TempData["Success"] = "Doctor added to shift successfully.";
             return RedirectToAction("DoctorInShift");
         }

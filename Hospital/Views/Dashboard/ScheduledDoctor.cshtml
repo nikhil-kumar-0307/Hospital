@@ -2,33 +2,27 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="panel">
     <div class="panel-header">SCHEDULE A DOCTOR</div>
     <div style="padding: 20px; max-width: 480px;">
-
         @using (Html.BeginForm("ScheduledDoctor", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.DoctorId, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.DropDownListFor(m => m.DoctorId, Model.DoctorList, "-- Select Doctor --", new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
                 @Html.ValidationMessageFor(m => m.DoctorId, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.ScheduledDate, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.ScheduledDate, "{0:yyyy-MM-dd}", new { type = "date", style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;" })
                 @Html.ValidationMessageFor(m => m.ScheduledDate, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.RoomNo, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.RoomNo, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. 21" })
                 @Html.ValidationMessageFor(m => m.RoomNo, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-
             <div style="margin-bottom: 14px; display:flex; gap: 24px;">
                 <label style="font-size:13px; display:flex; align-items:center; gap:6px;">
                     @Html.CheckBoxFor(m => m.Forenoon) Forenoon
@@ -37,18 +31,32 @@
                     @Html.CheckBoxFor(m => m.Afternoon) Afternoon
                 </label>
             </div>
-
             <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save Schedule</button>
         }
-
     </div>
 </div>
-
 <div class="panel">
     <div class="panel-header">SCHEDULED DOCTORS</div>
     <table>
+        <colgroup>
+            <col style="width:7%;" />
+            <col style="width:22%;" />
+            <col style="width:18%;" />
+            <col style="width:12%;" />
+            <col style="width:15%;" />
+            <col style="width:13%;" />
+            <col style="width:13%;" />
+        </colgroup>
         <thead>
-            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th><th>Room No</th><th>Date</th><th>F/N</th><th>A/N</th></tr>
+            <tr>
+                <th>SNo</th>
+                <th>Doctor's Name</th>
+                <th>Specialist</th>
+                <th>Room No</th>
+                <th>Date</th>
+                <th>F/N</th>
+                <th>A/N</th>
+            </tr>
         </thead>
         <tbody>
             @{
@@ -61,8 +69,8 @@
                 {
                     <tr>
                         <td>@sNo</td>
-                        <td class="doc-name">@item.Doctor.Name</td>
-                        <td class="specialist">@item.Doctor.Specialist</td>
+                        <td>@item.Doctor.Name</td>
+                        <td>@item.Doctor.Specialist</td>
                         <td>@item.RoomNo</td>
                         <td>@item.ScheduledDate.ToString("dd-MM-yyyy")</td>
                         <td>@Html.Raw(item.Forenoon ? "<span class='icon-yes'>&#10004;</span>" : "<span class='icon-no'>&#10006;</span>")</td>

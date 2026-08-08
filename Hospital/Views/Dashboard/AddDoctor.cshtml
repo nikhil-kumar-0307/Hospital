@@ -2,45 +2,46 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="panel">
     <div class="panel-header">ADD DOCTOR</div>
     <div style="padding: 20px; max-width: 480px;">
-
         @if (TempData["Success"] != null)
         {
             <div style="background:#e6f7ea; color:#1e9e4e; border:1px solid #b8e6c4; padding:8px 12px; border-radius:4px; font-size:13px; margin-bottom:14px;">
                 @TempData["Success"]
             </div>
         }
-
         @using (Html.BeginForm("AddDoctor", "Dashboard", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.Name, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.Name, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. Dr Krishn Kant Chaudhary" })
                 @Html.ValidationMessageFor(m => m.Name, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-
             <div style="margin-bottom: 14px;">
                 @Html.LabelFor(m => m.Specialist, new { style = "display:block; font-size:13px; font-weight:600; margin-bottom:5px;" })
                 @Html.TextBoxFor(m => m.Specialist, new { style = "width:100%; padding:9px 10px; border:1px solid #ccd4dc; border-radius:4px;", placeholder = "e.g. CMO, PHYSICIAN, SURGEON" })
                 @Html.ValidationMessageFor(m => m.Specialist, "", new { style = "color:#d92b2b; font-size:12px;" })
             </div>
-
             <button type="submit" style="background:#1f6fb2; color:#fff; border:none; padding:10px 22px; font-weight:700; border-radius:4px; cursor:pointer;">Save Doctor</button>
         }
-
     </div>
 </div>
-
 <div class="panel">
     <div class="panel-header">ALL DOCTORS</div>
     <table>
+        <colgroup>
+            <col style="width:10%;" />
+            <col style="width:45%;" />
+            <col style="width:45%;" />
+        </colgroup>
         <thead>
-            <tr><th>SNo</th><th>Doctor's Name</th><th>Specialist</th></tr>
+            <tr>
+                <th>SNo</th>
+                <th>Doctor's Name</th>
+                <th>Specialist</th>
+            </tr>
         </thead>
         <tbody>
             @{
@@ -53,8 +54,8 @@
                 {
                     <tr>
                         <td>@sNo</td>
-                        <td class="doc-name">@doc.Name</td>
-                        <td class="specialist">@doc.Specialist</td>
+                        <td>@doc.Name</td>
+                        <td>@doc.Specialist</td>
                     </tr>
                     sNo++;
                 }
